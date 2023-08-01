@@ -72,40 +72,60 @@ const menu = [
     desc: `skateboard fam synth authentic semiotics. Live-edge lyft af, edison bulb yuccie crucifix microdosing.`,
   },
 ];
-const sectionCenter = document.querySelector(".section-center")
-const btns = document.querySelectorAll(".filter-btn")
+
+const section = document.querySelector(".section-center")
 window.addEventListener("DOMContentLoaded",function(){
-  displayMenuItems(menu)
-// console.log(displayItems);
-});
-btns.forEach(item=>item.addEventListener("click",function(e){
-  const category = e.currentTarget.dataset.id
-  const menuCategory = menu.filter(function(item){
-    if(item.category === category){
-      return item
-    }
-  })
-    if(category === "all"){
-      return displayMenuItems(menu)
-    }
-    else{
-      return displayMenuItems(menuCategory)
-    }
-
-}))
-function displayMenuItems(menuItems){
-  let displayItems = menuItems.map(item=>`
-  <article class="menu-item">
-        <img src=${item.img} alt="menu-item" class="photo" >
-        <div class="item-info">
-          <header>
-            <h4>${item.title}</h4>
-            <h4 class="price">$${item.price}</h4>
-          </header>
-            <p class="item-text">${item.desc}</p>
-        </div>
-      </article>`)
-      displayItems = displayItems.join("")
-      sectionCenter.innerHTML = displayItems
+  myDisplayItem(menu)
+  const categories = menu.reduce(function(value,item){
+if(!value.includes(item.category)){
+  value.push(item.category)
 }
+return value
 
+  },
+  [`All`]
+  )
+  const container = document.querySelector(".btn-container")
+   const categoryBtn = categories.map(function(item){
+    return `<button class="filter-btn" type="button" data-id=${item}>${item}</button>`
+  }).join(" ")
+container.innerHTML = categoryBtn
+const btns =document.querySelectorAll(".filter-btn")
+btns.forEach(function(btn){
+  btn.addEventListener("click",function(e){
+    let filterbtn = e.currentTarget.dataset.id
+    let filterItems = menu.filter(function(items){
+      if(items.category == filterbtn){
+        return items
+      }
+    })
+      if(filterbtn == `all`){
+        myDisplayItem(menu)
+      }
+      else{
+        myDisplayItem(filterItems)
+      }
+})
+})
+
+})
+
+
+
+function myDisplayItem(myItem){
+  let myDisplay = myItem.map(function(item){
+    return `<article class="menu-item">
+    <img src=${item.img} alt=${item.title} class="photo">
+    <div class="item-info">
+      <header>
+        <h4>${item.title}</h4>
+        <h4 class="price">$${item.price}</h4>
+      </header>
+      <p class="item-text">${item.desc}</p>
+    </div>
+  </article> `
+  })
+  myDisplay = myDisplay.join(" ")
+  section.innerHTML = myDisplay
+  
+}
